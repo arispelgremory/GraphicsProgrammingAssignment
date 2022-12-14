@@ -153,6 +153,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Arm.cpp" />
+    <ClCompile Include="Body.cpp" />
+    <ClCompile Include="Leg.cpp" />
     <ClCompile Include="Robot.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
