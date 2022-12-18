@@ -8,6 +8,8 @@
 
 #define WINDOW_TITLE "Robot"
 
+bool isOrtho = true;
+int Rx, Ry, Rz,Rs, RotS = 0.5;
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -18,8 +20,12 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		break;
 
 	case WM_KEYDOWN:
-		if (wParam == VK_ESCAPE) PostQuitMessage(0);
-		break;
+		if (wParam == VK_ESCAPE)
+			PostQuitMessage(0);
+		else if (wParam == 0x5A) //Z
+			isOrtho = false;
+		else if (wParam == 0x58) //X
+			isOrtho = true;
 
 	default:
 		break;
@@ -196,18 +202,491 @@ void DrawCone(int baseRadius, float height, int slices, int stacks)
 	gluDeleteQuadric(cone);
 }
 
+void Draw1() {
+	//front
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_TRIANGLES);
+	glVertex3f(0.0,0.0,0.0);
+	glVertex3f(0.2,0.0,0.0);
+	glVertex3f(0.2,-0.2,0.0);
+	glEnd();
+	//line of front
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(0.0, 0.0, 0.0);
+	glVertex3f(0.2, 0.0, 0.0);
+	glVertex3f(0.2, -0.2, 0.0);
+	glEnd();
+
+	//upper
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_QUADS);
+	glVertex3f(0.0,0.0,0.0);
+	glVertex3f(0.0,0.0,-0.1);
+	glVertex3f(0.2,0.0,-0.1);
+	glVertex3f(0.2,0.0,0.0);
+	glEnd();
+	//Line of upper
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(0.0,0.0,0.0);
+	glVertex3f(0.0,0.0,-0.1);
+	glVertex3f(0.2,0.0,-0.1);
+	glVertex3f(0.2,0.0,0.0);
+	glEnd();
+
+	//right
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_QUADS);
+	glVertex3f(0.2, 0.0, 0.0);
+	glVertex3f(0.2, 0.0, -0.1);
+	glVertex3f(0.2, -0.2, -0.1);
+	glVertex3f(0.2, -0.2, 0.0);
+	glEnd();
+	//Line of right
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(0.2, 0.0, 0.0);
+	glVertex3f(0.2, 0.0, -0.1);
+	glVertex3f(0.2, -0.2, -0.1);
+	glVertex3f(0.2, -0.2, 0.0);
+	glEnd();
+
+	//Down
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_QUADS);
+	glVertex3f(0.0, 0.0, 0.0);
+	glVertex3f(0.0, 0.0, -0.1);
+	glVertex3f(0.2, -0.2, -0.1);
+	glVertex3f(0.2, -0.2, 0.0);
+	glEnd();
+	//Line Of Down
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(0.0, 0.0, 0.0);
+	glVertex3f(0.0, 0.0, -0.1);
+	glVertex3f(0.2, -0.2, -0.1);
+	glVertex3f(0.2, -0.2, 0.0);
+	glEnd();
+
+	//back
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_TRIANGLES);
+	glVertex3f(0.0, 0.0, -0.1);
+	glVertex3f(0.2, 0.0, -0.1);
+	glVertex3f(0.2, -0.2, -0.1);
+	glEnd();
+	//Line Of back
+	glColor3f(0.0,0.0,0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(0.0, 0.0, -0.1);
+	glVertex3f(0.2, 0.0, -0.1);
+	glVertex3f(0.2, -0.2, -0.1);
+	glEnd();
+}
+
+void Draw2() {
+	//Front
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_QUADS);
+	glVertex3f(0.2, 0.0, 0.0);
+	glVertex3f(0.8, 0.0, 0.0);
+	glVertex3f(0.8, -0.2, 0.0);
+	glVertex3f(0.2, -0.2, 0.0);
+	glEnd();
+	//Line of Front
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(0.2, 0.0, 0.0);
+	glVertex3f(0.8, 0.0, 0.0);
+	glVertex3f(0.8, -0.2, 0.0);
+	glVertex3f(0.2, -0.2, 0.0);
+	glEnd();
+
+	//Upper
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_QUADS);
+	glVertex3f(0.2, 0.0, 0.0);
+	glVertex3f(0.8, 0.0, 0.0);
+	glVertex3f(0.8, 0.0, -0.1);
+	glVertex3f(0.2, 0.0, -0.1);
+	glEnd();
+	//Line Of Upper
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(0.2, 0.0, 0.0);
+	glVertex3f(0.8, 0.0, 0.0);
+	glVertex3f(0.8, 0.0, -0.1);
+	glVertex3f(0.2, 0.0, -0.1);
+	glEnd();
+
+	//Right
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_QUADS);
+	glVertex3f(0.8, 0.0, 0.0);
+	glVertex3f(0.8, -0.2, 0.0);
+	glVertex3f(0.8, -0.2, -0.1);
+	glVertex3f(0.8, 0.0, -0.1);
+	glEnd();
+	//Line Of Right
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(0.8, 0.0, 0.0);
+	glVertex3f(0.8, -0.2, 0.0);
+	glVertex3f(0.8, -0.2, -0.1);
+	glVertex3f(0.8, 0.0, -0.1);
+	glEnd();
+
+	//Left
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_QUADS);
+	glVertex3f(0.2, 0.0, 0.0);
+	glVertex3f(0.2, 0.0, -0.1);
+	glVertex3f(0.2, -0.2, -0.1);
+	glVertex3f(0.2, -0.2, 0.0);
+	glEnd();
+	//Line of Left
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(0.2, 0.0, 0.0);
+	glVertex3f(0.2, 0.0, -0.1);
+	glVertex3f(0.2, -0.2, -0.1);
+	glVertex3f(0.2, -0.2, 0.0);
+	glEnd();
+
+	//Down
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_QUADS);
+	glVertex3f(0.2, -0.2, 0.0);
+	glVertex3f(0.8, -0.2, 0.0);
+	glVertex3f(0.8, -0.2, -0.1);
+	glVertex3f(0.2, -0.2, -0.1);
+	glEnd();
+	//Line Of Down
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(0.2, -0.2, 0.0);
+	glVertex3f(0.8, -0.2, 0.0);
+	glVertex3f(0.8, -0.2, -0.1);
+	glVertex3f(0.2, -0.2, -0.1);
+	glEnd();
+
+	//Back
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_QUADS);
+	glVertex3f(0.2, 0.0, -0.1);
+	glVertex3f(0.8, 0.0, -0.1);
+	glVertex3f(0.8, -0.2, -0.1);
+	glVertex3f(0.2, -0.2, -0.1);
+	glEnd();
+	//Line Of Back
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(0.2, 0.0, -0.1);
+	glVertex3f(0.8, 0.0, -0.1);
+	glVertex3f(0.8, -0.2, -0.1);
+	glVertex3f(0.2, -0.2, -0.1);
+	glEnd();
+}
+
+void Draw3() {
+	//Front
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_TRIANGLES);
+	glVertex3f(0.8, 0.0, 0.0);
+	glVertex3f(0.8, -0.2, 0.0);
+	glVertex3f(1.0, -0.2, 0.0);
+	glEnd();
+	//line of Front
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(0.8, 0.0, 0.0);
+	glVertex3f(0.8, 0.0, 0.0);
+	glVertex3f(1.0, -0.2, 0.0);
+	glEnd();
+
+	//upper
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_QUADS);
+	glVertex3f(0.8, 0.0, 0.0);
+	glVertex3f(0.8, 0.0, -0.1);
+	glVertex3f(1.0, -0.2, -0.1);
+	glVertex3f(1.0, -0.2, 0.0);
+	glEnd();
+	//Line of upper
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(0.8, 0.0, 0.0);
+	glVertex3f(0.8, 0.0, -0.1);
+	glVertex3f(1.0, -0.2, -0.1);
+	glVertex3f(1.0, -0.2, 0.0);
+	glEnd();
+
+	//left
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_QUADS);
+	glVertex3f(0.8, 0.0, 0.0);
+	glVertex3f(0.8, 0.0, -0.1);
+	glVertex3f(0.8, -0.2, -0.1);
+	glVertex3f(0.8, -0.2, 0.0);
+	glEnd();
+	//Line of left
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(0.8, 0.0, 0.0);
+	glVertex3f(0.8, 0.0, -0.1);
+	glVertex3f(0.8, -0.2, -0.1);
+	glVertex3f(0.8, -0.2, 0.0);
+	glEnd();
+
+	//Down
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_QUADS);
+	glVertex3f(0.8, 0.0, 0.0);
+	glVertex3f(0.8, 0.0, -0.1);
+	glVertex3f(1.0, -0.2, -0.1);
+	glVertex3f(1.0, -0.2, 0.0);
+	glEnd();
+	//Line Of Down
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(0.8, 0.0, 0.0);
+	glVertex3f(0.8, 0.0, -0.1);
+	glVertex3f(1.0, -0.2, -0.1);
+	glVertex3f(1.0, -0.2, 0.0);
+	glEnd();
+
+	//Back
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_TRIANGLES);
+	glVertex3f(0.8, 0.0, -0.1);
+	glVertex3f(0.8, -0.2, -0.1);
+	glVertex3f(1.0, -0.2, -0.1);
+	glEnd();
+	//line of Back
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(0.8, 0.0, -0.1);
+	glVertex3f(0.8, 0.0, -0.1);
+	glVertex3f(1.0, -0.2, -0.1);
+	glEnd();
+}
+
+void Draw4() {
+	//Front
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_QUADS);
+	glVertex3f(0.2, -0.2, 0.0);
+	glVertex3f(2.0, -0.2, 0.0);
+	glVertex3f(2.0, -0.3, 0.0);
+	glVertex3f(0.2, -0.3, 0.0);
+	glEnd();
+	//Line of Front
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(0.2, -0.2, 0.0);
+	glVertex3f(2.0, -0.2, 0.0);
+	glVertex3f(2.0, -0.3, 0.0);
+	glVertex3f(0.2, -0.3, 0.0);
+	glEnd();
+
+	//Upper
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_QUADS);
+	glVertex3f(0.2, -0.2, 0.0);
+	glVertex3f(2.0, -0.2, 0.0);
+	glVertex3f(2.0, -0.2, -0.1);
+	glVertex3f(0.2, -0.2, -0.1);
+	glEnd();
+	//Line Of Upper
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(0.2, -0.2, 0.0);
+	glVertex3f(2.0, -0.2, 0.0);
+	glVertex3f(2.0, -0.2, -0.1);
+	glVertex3f(0.2, -0.2, -0.1);
+	glEnd();
+
+	//Right
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_QUADS);
+	glVertex3f(2.0, -0.2, 0.0);
+	glVertex3f(2.0, -0.3, 0.0);
+	glVertex3f(2.0, -0.3, -0.1);
+	glVertex3f(2.0, -0.2, -0.1);
+	glEnd();
+	//Line Of Right
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(2.0, -0.2, 0.0);
+	glVertex3f(2.0, -0.3, 0.0);
+	glVertex3f(2.0, -0.3, -0.1);
+	glVertex3f(2.0, -0.2, -0.1);
+	glEnd();
+
+	//Left
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_QUADS);
+	glVertex3f(0.2, -0.2, 0.0);
+	glVertex3f(0.2, -0.2, -0.1);
+	glVertex3f(0.2, -0.3, -0.1);
+	glVertex3f(0.2, -0.3, 0.0);
+	glEnd();
+	//Line of Left
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(0.2, -0.2, 0.0);
+	glVertex3f(0.2, -0.2, -0.1);
+	glVertex3f(0.2, -0.3, -0.1);
+	glVertex3f(0.2, -0.3, 0.0);
+	glEnd();
+
+	//Down
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_QUADS);
+	glVertex3f(0.2, -0.3, 0.0);
+	glVertex3f(2.0, -0.3, 0.0);
+	glVertex3f(2.0, -0.3, -0.1);
+	glVertex3f(0.2, -0.3, -0.1);
+	glEnd();
+	//Line Of Down
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(0.2, -0.3, 0.0);
+	glVertex3f(2.0, -0.3, 0.0);
+	glVertex3f(2.0, -0.3, -0.1);
+	glVertex3f(0.2, -0.3, -0.1);
+	glEnd();
+
+	//Back
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_QUADS);
+	glVertex3f(0.2, -0.2, -0.1);
+	glVertex3f(2.0, -0.2, -0.1);
+	glVertex3f(2.0, -0.3, -0.1);
+	glVertex3f(0.2, -0.3, -0.1);
+	glEnd();
+	//Line Of Back
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(0.2, -0.2, -0.1);
+	glVertex3f(2.0, -0.2, -0.1);
+	glVertex3f(2.0, -0.3, -0.1);
+	glVertex3f(0.2, -0.3, -0.1);
+	glEnd();
+}
+
+void Draw5() {
+	//Front
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_TRIANGLES);
+	glVertex3f(2.0, -0.2, 0.0);
+	glVertex3f(2.0, -0.3, 0.0);
+	glVertex3f(2.2, -0.3, 0.0);
+	glEnd();
+	//line of Front
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(2.0, -0.2, 0.0);
+	glVertex3f(2.0, -0.2, 0.0);
+	glVertex3f(2.2, -0.3, 0.0);
+	glEnd();
+
+	//upper
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_QUADS);
+	glVertex3f(2.0, -0.2, 0.0);
+	glVertex3f(2.0, -0.2, -0.1);
+	glVertex3f(2.2, -0.3, -0.1);
+	glVertex3f(2.2, -0.3, 0.0);
+	glEnd();
+	//Line of upper
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(2.0, -0.2, 0.0);
+	glVertex3f(2.0, -0.2, -0.1);
+	glVertex3f(2.2, -0.3, -0.1);
+	glVertex3f(2.2, -0.3, 0.0);
+	glEnd();
+
+	//left
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_QUADS);
+	glVertex3f(2.0, -0.2, 0.0);
+	glVertex3f(2.0, -0.2, -0.1);
+	glVertex3f(2.0, -0.3, -0.1);
+	glVertex3f(2.0, -0.3, 0.0);
+	glEnd();
+	//Line of left
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(2.0, -0.2, 0.0);
+	glVertex3f(2.0, -0.2, -0.1);
+	glVertex3f(2.0, -0.3, -0.1);
+	glVertex3f(2.0, -0.3, 0.0);
+	glEnd();
+
+	//Down
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_QUADS);
+	glVertex3f(2.0, -0.2, 0.0);
+	glVertex3f(2.0, -0.2, -0.1);
+	glVertex3f(2.2, -0.3, -0.1);
+	glVertex3f(2.2, -0.3, 0.0);
+	glEnd();
+	//Line Of Down
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(2.0, -0.2, 0.0);
+	glVertex3f(2.0, -0.2, -0.1);
+	glVertex3f(2.2, -0.3, -0.1);
+	glVertex3f(2.2, -0.3, 0.0);
+	glEnd();
+
+	//Back
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_TRIANGLES);
+	glVertex3f(2.0, -0.2, -0.1);
+	glVertex3f(2.0, -0.3, -0.1);
+	glVertex3f(2.2, -0.3, -0.1);
+	glEnd();
+	//line of Back
+	glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(2.0, -0.2, -0.1);
+	glVertex3f(2.0, -0.2, -0.1);
+	glVertex3f(2.2, -0.3, -0.1);
+	glEnd();
+}
 
 void display()
 {
-	//--------------------------------
-	//	OpenGL drawing
-	//--------------------------------
+	glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
 
-	//--------------------------------
-	//	End of OpenGL drawing
-	//--------------------------------
+	glRotatef(0.2, 1.0, 0.0, 0.0);
+	Draw1();
+	Draw2();
+	Draw3();
+	Draw4();
+	Draw5();
+
 }
-//--------------------------------------------------------------------
+
+void projection() {
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	if (isOrtho) {
+		//ortho view
+		glOrtho(-2.5, 2.5, -2.5, 2.5, -2.5, 2.5);
+	}
+	else {
+		//perspective view
+		gluPerspective(20.0, 1.0, -1.0, 1.0);
+		glFrustum(-10.0, 10.0, -10.0, 10.0, 1.0, 20.0);
+	}
+}
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 {
@@ -249,6 +728,8 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 
 	MSG msg;
 	ZeroMemory(&msg, sizeof(msg));
+
+	projection();
 
 	while (true)
 	{
