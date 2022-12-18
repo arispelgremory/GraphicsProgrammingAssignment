@@ -27,5 +27,8 @@
     <ClCompile Include="Leg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Shoulder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
