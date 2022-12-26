@@ -1,4 +1,5 @@
 
+#include <iostream>
 #include <Windows.h>
 #include <gl/GL.h>
 #include <gl/GLU.h>
@@ -8,6 +9,7 @@
 
 #define WINDOW_TITLE "Robot"
 
+float angle = 0.0f;
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -19,6 +21,8 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 
 		case WM_KEYDOWN:
 			if (wParam == VK_ESCAPE) PostQuitMessage(0);
+			else if (wParam == VK_LEFT) angle -= 0.5f;
+			else if (wParam == VK_RIGHT) angle += 0.5f;
 		break;
 
 		default:
@@ -71,6 +75,53 @@ void rgb(int r, int g, int b)
 {
 	glColor3f(cc(r), cc(g), cc(b));
 }
+
+// Trapezium function
+void DrawTriangularPrism()
+{
+	// Front
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.5f, 0.0f, 0.0f);
+	glVertex3f(0.5f, 0.5f, 0.5f);
+	glVertex3f(0.0f, 0.5f, 0.5f);
+	glEnd();
+	
+	// Left
+	glBegin(GL_LINE_LOOP);
+	rgb(255, 255, 255);
+	glVertex3f(0.0f, 0.5f, 0.5f);
+	glVertex3f(0.0f, 0.0f, 0.5f);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glEnd();
+
+	// Bottom
+	glBegin(GL_LINE_LOOP);
+	rgb(0, 255, 0);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 0.5f);
+	glVertex3f(0.5f, 0.0f, 0.5f);
+	glVertex3f(0.5f, 0.0f, 0.0f);
+	glEnd();
+
+	// Right
+	glBegin(GL_LINE_LOOP);
+	rgb(0, 0, 255);
+	glVertex3f(0.5f, 0.0f, 0.0f);
+	glVertex3f(0.5f, 0.0f, 0.5f);
+	glVertex3f(0.5f, 0.5f, 0.5f);
+	glEnd();
+
+	// Back
+	glBegin(GL_LINE_LOOP);
+	rgb(255, 255, 0);
+	glVertex3f(0.5f, 0.5f, 0.5f);
+	glVertex3f(0.0f, 0.5f, 0.5f);
+	glVertex3f(0.0f, 0.0f, 0.5f);
+	glVertex3f(0.5f, 0.0f, 0.5f);
+	glEnd();
+}
+
 
 // Cube function
 void DrawCube(float x, float y, float z, float height, float width, float depth, GLenum shape)
@@ -202,7 +253,23 @@ void display()
 	//--------------------------------
 	//	OpenGL drawing
 	//--------------------------------
-		
+	
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// glMatrixMode(GL_MODELVIEW);
+
+	angle = 0.1f;
+	if (angle > 360.0f)
+	{
+		angle = 0.0f;
+	}
+	
+	glRotatef(angle, 0.0f, 1.0f, 0.0f);
+	std::cout << "Angle: " << angle << std::endl;
+	// DrawTriangularPrism();
+
+	
+	
 	//--------------------------------
 	//	End of OpenGL drawing
 	//--------------------------------
