@@ -20,6 +20,8 @@ bool isOrtho = true;
 float tx = 0.0, ty = 0.0, tz = 0.0, tSpeed = 1.0;
 float rS = 0.0,rSpeed = 1.0;
 
+float thighRotation = 0.0, waistRotation = 0.0;
+
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch(msg)
@@ -116,6 +118,30 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			{
 			isOrtho = true;
 			}
+		else if (wParam == VK_NUMPAD7)
+		{
+			thighRotation += 1.0;
+			// if(thighRotation >= 90.0)
+			// 	thighRotation = 0.0;
+		}
+		else if (wParam == VK_NUMPAD8)
+		{
+			thighRotation -= 1.0;
+			// if(thighRotation <= 0.0)
+			// 	thighRotation = 90.0;
+		}
+		else if (wParam == VK_NUMPAD4)
+		{
+			waistRotation += 1.0;
+			if(waistRotation >= 90.0)
+				waistRotation = -90.0;
+		}
+		else if (wParam == VK_NUMPAD5)
+		{
+			waistRotation -= 1.0;
+			if(waistRotation <= -90.0)
+				waistRotation = 90.0;
+		}
 			
 		break;
 
@@ -211,7 +237,6 @@ void DrawTriangularPrism(float x, float y, float z, float height, float width, f
 	glVertex3f(x + width, y, z + depth);
 	glEnd();
 }
-
 
 // Cube function
 void DrawCube(float x, float y, float z, float height, float width, float depth, GLenum shape)
@@ -332,6 +357,23 @@ void DrawCone(int baseRadius, float height, int slices, int stacks)
 	gluDeleteQuadric(cone);
 }
 
+void ApplyThighTransformations()
+{
+	// Rotate the leg around the line of the z-axis of the patella
+	glRotatef(thighRotation, 1.0, 0.0, 0.0);
+}
+
+void ApplyWaistTransformation()
+{
+
+	// glTranslatef(0.0, 0.1, 0.0);
+	
+	// Rotate the inner thighs around the x-axis of the wrist
+	glRotatef(waistRotation, 1.0, 0.0, 0.0);
+
+	// glTranslatef(0.0, -0.1, 0.0);
+}
+
 void DrawRightFoot(float centerX, float centerY, float centerZ)
 {
 	// Toes
@@ -367,6 +409,49 @@ void DrawRightFoot(float centerX, float centerY, float centerZ)
 			DrawCylinder(0.3, 0.3, 0.2, 20, 20);
 		glPopMatrix();
 	glPopMatrix();
+}
+
+void DrawRightLeg(float centerX, float centerY, float centerZ)
+{
+		glPushMatrix();
+		// Translate the leg to the center of the z-axis of the Waist
+		glTranslatef(1.3, 2.5, 0.8);
+
+		ApplyWaistTransformation();
+
+		// Translate the leg to waist center point
+		glTranslatef(-1.3, -2.5, -0.8);
+
+		glPushMatrix();
+
+		rgb(255, 255, 255);
+
+			// Translate the thigh back to desired position
+			glTranslatef(centerX - 0.1, centerY + 0.25, centerZ + 0.5);
+								
+			// Rotate the leg around the line of the x-axis of the patella
+			ApplyThighTransformations();
+
+			// Translate the thigh to the center of the patella
+			glTranslatef(-centerX + 0.1, -centerY - 0.25, -centerZ - 0.5);
+								
+			// Thights
+			DrawCube(centerX - 0.1, centerY + 0.25, centerZ + 0.5, 2.5, 1.3, 0.8, GL_LINE_LOOP);
+				
+		glPopMatrix();
+
+		// Left leg center (Patella)
+		rgb(0,255,255);
+		DrawCube(centerX, centerY, centerZ + 0.5, 0.5, 1.0, 0.5, GL_LINE_LOOP);
+
+		// Length: 7.0
+		DrawRightFoot(1.5f, centerY + -3.5f, 0.0f);
+
+		
+	
+	glPopMatrix();
+
+	
 }
 
 void DrawLeftFoot(float centerX, float centerY, float centerZ)
@@ -406,6 +491,149 @@ void DrawLeftFoot(float centerX, float centerY, float centerZ)
 	glPopMatrix();
 }
 
+void DrawLeftLeg(float centerX, float centerY, float centerZ)
+{
+	glPushMatrix();
+		// Translate the leg to the center of the z-axis of the Waist
+		glTranslatef(-1.3, 2.5, 0.8);
+
+		ApplyWaistTransformation();
+
+		// Translate the leg to waist center point
+		glTranslatef(1.3, -2.5, -0.8);
+
+	glPushMatrix();
+
+	glPushMatrix();
+
+		rgb(255, 255, 255);
+
+		// Translate the thigh back to desired position
+		glTranslatef(centerX - 0.1, centerY + 0.25, centerZ + 0.5);
+									
+		// Rotate the leg around the line of the x-axis of the patella
+		ApplyThighTransformations();
+
+		// Translate the thigh to the center of the patella
+		glTranslatef(-centerX + 0.1, -centerY - 0.25, -centerZ - 0.5);
+	
+		// Thights
+		DrawCube(centerX - 0.1, centerY + 0.25, centerZ + 0.5, 2.5, 1.3, 0.8, GL_LINE_LOOP);
+	glPopMatrix();
+
+	
+	// Left leg center (Patella)
+	rgb(0,255,255);
+	DrawCube(centerX, centerY, centerZ + 0.5, 0.5, 1.0, 0.5, GL_LINE_LOOP);
+
+	// Length: 7.0
+	DrawLeftFoot(-1.5f, centerY + -3.5f, 0.0f);
+	glPopMatrix();
+	
+
+	
+	
+}
+
+void DrawLegs()
+{
+	glPushMatrix();
+		// Inner thighs
+		rgb(255,0,255);
+		// // Rotate the legs around the x-axis of the waist
+		// glRotatef(waistRotation, 1.0, 0.0, 0.0);
+
+		
+
+		// Translate the leg back to its desired position
+		glTranslatef(0.0f, 2.0f, 0.0f);
+		ApplyWaistTransformation();
+		// Translate the leg back to its original position
+		glTranslatef(0.0f, -2.0f, 0.0f);
+
+		glPushMatrix();
+
+			glTranslatef(-1.5f, -5.0f, 0.8f);
+			ApplyThighTransformations();
+			glTranslatef(1.5f, 5.0f, -0.8f);
+	
+			DrawCube(-0.5, -3.0, 0.5, 1.0, 2.0, 0.8, GL_LINE_LOOP);
+		glPopMatrix();
+	
+	glPopMatrix();
+    
+	glPushMatrix();
+		// glTranslatef(0.5, 0.0f, 0.0f);
+
+		// Translate the left leg to the center of the waist
+		glTranslatef(-1.5f, -5.0f, 0.0f);
+
+		// Rotate the left leg around the center of the waist
+		glRotatef(waistRotation, 1.0, 0.0, 0.0);
+
+		// // Rotate the left leg around the center of the patella
+		// glRotatef(thighRotation, 1.0, 0.0, 0.0);
+	
+		// Translate the left leg back to its original position
+		glTranslatef(1.5f, 5.0f, 0.0f);
+
+		
+		DrawLeftLeg(-1.5f, -5.0f, 0.0f);
+	glPopMatrix();
+
+	glPushMatrix();
+		// glTranslatef(0.5, 0.0f, 0.0f);
+
+		// Translate the left leg to the center of the waist
+		glTranslatef(1.5f, -5.0f, 0.0f);
+
+		// Rotate the left leg around the center of the waist
+		glRotatef(waistRotation, 1.0, 0.0, 0.0);
+
+		// // Rotate the left leg around the center of the patella
+		// glRotatef(thighRotation, 1.0, 0.0, 0.0);
+		
+		// Translate the left leg back to its original position
+		glTranslatef(-1.5f, 5.0f, 0.0f);
+		DrawRightLeg(1.5f, -5.0f, 0.0f);
+	glPopMatrix();
+
+	
+}
+
+void DrawWaist()
+{
+	// Waist
+	rgb(255,0,0);
+    
+	glPushMatrix();
+		// glTranslatef(-1.5f, -5.0f, 0.0f);
+		glPushMatrix();
+			ApplyWaistTransformation();
+
+			// Translate the waist back to its desired position
+			glTranslatef(-0.0, -2.0, 0.0f);
+	
+	
+			// Translate the waist back to its original position
+			glTranslatef(0.0, 2.0, 0.0f);
+
+			glTranslatef(-1.5f, -5.0f, 0.8f);
+			ApplyThighTransformations();
+			glTranslatef(1.5f, 5.0f, -0.8f);
+	
+			DrawCube(-0.5, -2.0, 0.5, 0.5, 2.0, 0.8, GL_LINE_LOOP);
+		glPopMatrix();
+	glPopMatrix();
+}
+
+void DrawBottomBody()
+{
+	DrawWaist();
+	DrawLegs();
+}
+
+
 void display()
 {
 	//--------------------------------
@@ -422,10 +650,8 @@ void display()
 	}
 	
 	glRotatef(angle, rotationX, rotationY, rotationZ);
-	std::cout << "Angle: " << angle << std::endl;
-	DrawLeftFoot(-1.5f, -5.0f, 0.0f);
-	DrawRightFoot(1.5f, -5.0f, 0.0f);
-	
+
+	DrawBottomBody();
 	
 	//--------------------------------
 	//	End of OpenGL drawing
@@ -443,7 +669,7 @@ void projection() {
 		//ortho view
 		glOrtho(-10.0,10.0, -10.0,10.0,ONear,OFar);
 	}
-	else{
+	else {
 		//perspective view
 		gluPerspective(20.0, 1.0, -1.0, 1.0);
 		glFrustum(-10.0, 10.0, -10.0, 10.0, PNear, PFar);
